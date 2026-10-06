@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Word Guess</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+
+<body class="bg-[url('https://i.pinimg.com/736x/a6/27/fa/a627fa4cdbf523f91a5e05f7e3b5dd51.jpg')] bg-no-repeat bg-cover bg-center">
+    <div id="app">
+        <div class="flex justify-center">
+            <div class="mt-40">
+                <h1 class="text-center font-bold text-5xl">Guess the Words!</h1>
+
+                <h2 class="text-5xl mb-10 text-center">
+                    {{display.join(" ")}}
+
+                </h2>
+
+                <div v-for="(row, i) in letters" :key="i" class="flex  justify-center gap-3 mb-3">
+                    <div v-for="letter in row" :key="letter" @click="press(letter)"
+                        class="rounded-lg bg-blue-300 px-5 py-2 cursor-pointer text-2xl">
+                        {{letter}}
+                    </div>
+                </div>
+
+                <h1 class="text-5xl text-green-600 text-center mt-10">
+                    {{message}}
+
+                </h1>
+
+            </div>
+        </div>
+
+    </div>
+    <script>
+        Vue.createApp({
+            data() {
+                return {
+                    letters: [
+                        ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+                        ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
+                        ["Z", "X", "C", "V", "B", "N", "M",]
+                    ],
+
+                    words: ["SPEED", "SLATE", "TABLE", "EAGER", "TRACK"],
+
+                    message: "",
+                    display: ["_", "_", "_", "_", "_"],
+                    usedLetters: [],
+                    randomValue: ""
+                }
+            },
+
+            methods: {
+                getRamdomWord() {
+                    index = Math.floor(Math.random() * this.words.length);
+                    return this.words[index];
+                    console.log(index)
+                },
+
+                press(letter) {
+                    if (this.usedLetters.includes(letter)) return;
+
+                    this.usedLetters.push(letter);
+
+                    for (let i = 0; i < this.ramdomValue.length; i++) {
+
+                        if (this.ramdomValue[i] === letter) {
+                            this.display[i] = letter;
+                        }
+                    }
+
+                    this.checkWinner();
+
+                },
+
+                checkWinner() {
+                    if (this.display.join("") === this.ramdomValue) {
+                        this.message = "you win!";
+
+                        setTimeout(() => {
+                            this.resetGame();
+                        }, 2000);
+
+                    }
+
+                },
+                resetGame() {
+                    this.ramdomValue = this.getRamdomWord();
+                    this.display = ["_", "_", "_", "_", "_"];
+                    this.usedLetters = [];
+                    this.message = "";
+                }
+
+
+            },
+
+            mounted() {
+                this.ramdomValue = this.getRamdomWord();
+                console.log("Word", this.ramdomValue);
+            }
+        }).mount('#app')
+
+
+
+
+    </script>
+
+</body>
+
+</html>
